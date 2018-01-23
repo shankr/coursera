@@ -137,7 +137,10 @@ class FunSetSuite extends FunSuite {
 
   test("for all returns the correct result") {
     new TestSets {
-      assert(forall(union(union(s1, s2), s3), x => x >=1 && x <= 3), "all members of {1, 2, 3} between -2000 and 2000 are 1 <= x <= 3")
+      val setOf5001 = boundedSet(2500)
+      assert(forall(setOf5001, x => x >= -2500 && x <= 2500), "all members of {-2500...2500} between -2000 and 2000 are -2500 <= x <= 2500")
+      val setOf100 = boundedSet(50)
+      assert(!forall(setOf100, x => x % 2 == 0), "all members of {-50..50} between -2000 and 2000 are even is not true")
     }
   }
 
