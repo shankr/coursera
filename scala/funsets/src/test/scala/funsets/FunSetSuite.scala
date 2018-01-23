@@ -110,5 +110,44 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect contains the correct elements") {
+    new TestSets {
+      val s = intersect(s1, s1)
+      assert(contains(s, 1), "Intersect with itself is itself")
+      val sIntersect = intersect(s1, union(s1, s2))
+      assert(!contains(sIntersect, 2), "Intersect with union involving itself cannot be the other set")
+    }
+  }
 
+  test("diff between two sets contains the correct elements") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(contains(diff(s, s1), 2), "diff of union of two disjoint sets and one of the sets is the other set")
+    }
+  }
+
+  test("filter returns the correct elements") {
+    new TestSets {
+      val s = filter(union(union(s1, s2), s3), x => x % 2 == 1)
+      assert(contains(s, 1), "Filtering odd in (1, 2, 3) has 1 in the filtered set")
+      assert(contains(s, 3), "Filtering odd in (1, 2, 3) has 3 in the filtered set")
+      assert(!contains(s, 2), "Filtering odd in (1, 2, 3) has 2 in the filtered set")
+    }
+  }
+
+  test("for all returns the correct result") {
+    new TestSets {
+      assert(forall(union(union(s1, s2), s3), x => x >=1 && x <= 3), "all members of {1, 2, 3} between -2000 and 2000 are 1 <= x <= 3")
+    }
+  }
+
+  test("map contains the correct elements") {
+    new TestSets {
+      val s = map(union(s1, s3), x => x * 2)
+      assert(contains(s, 2), "2 = 1 * 2")
+      assert(contains(s, 6), "6 = 3 * 2")
+      assert(!contains(s, 1), "1 is in original set, but not after mapping")
+      assert(!contains(s, 3), "3 is in original set, but not after mapping")
+    }
+  }
 }
